@@ -2,6 +2,8 @@
 
 :- dynamic i_am_at/1, at/2, holding/1, talked/1, examined/1, time/1.
 :- retractall(at(_, _)), retractall(i_am_at(_)), retractall(alive(_)).
+:- discontiguous talkable/1.
+:- discontiguous in/2.
 
 /* Starting position */
  
@@ -52,10 +54,10 @@ at(prayer_book, your_house).
 
 talkable(beggar).
 in(beggar, compass).
-requires(compass, beer).
+requires(compass, beer_tankard).
 
-%talkable(witch).
-%in(witch, potion).
+talkable(witch).
+in(witch, potion).
 requires(bark_piece).
 
 
@@ -113,8 +115,8 @@ controls :-
         write('Available commands are:'), nl,
         write('start.             -- to start the game.'), nl,
         write('n.  s.  e.  w.     -- to move in given direction.'), nl,
-        /*write('take(Object).      -- to pick up an object.'), nl,
-        write('drop(Object).      -- to put down an object.'), nl,
+        write('take(Object).      -- to pick up an object.'), nl,
+        /*write('drop(Object).      -- to put down an object.'), nl,
         write('i.                 -- to check your inventory.'), nl,*/
         write('talk(Person)    -- to talk to people.'), nl,
         write('look.              -- to look around you again.'), nl,
@@ -168,8 +170,15 @@ talk_to(beggar) :-
         talkable(beggar),
         assert(talked(beggar)),
         in(beggar, Y),
-        write('What''s the matter Reverend'), nl,
-        write('The beggar dropped a '), write(Y), write(' for you to take!'), nl,
+        write('Beggar: What''s the matter Reverend? Can''t go inside your church?'), nl,
+        write('I''ll tell you what. I heard a witch lives in the swamp south to Eadburgh.'), nl,
+        write('She might be able to help you with your... situation. '), nl,
+        write('Oh but you won''t get there so easily. You will need a compass to traverse those wetlands.'), nl,
+        write('Luckily for you, I''ve got one right here. Sure you can have it...'), nl,
+        write('Oh you thought I would give it away so easily? Gwahaha'), nl,
+        write('FOOD? MONEY? Do I look like a charity case to you?'), nl,
+        write('BEER IS WHAT I WANT! Go get me some delicious beer from the Inn and I''ll give you my compass.'), nl, nl,
+        write('The beggar dropped a '), write(Y), write(' for you to take in exchange for some beer.'), nl,
         i_am_at(Place),
         assert(at(Y,Place)),
         !, nl.
@@ -178,20 +187,20 @@ talk_to(witch) :-
         talkable(witch),
         assert(talked(witch)),
         in(witch, Y),
-        write('What''s the matter Reverend'), nl,
+        write('I am a witch'), nl,
         write('The witch dropped a '), write(Y), write(' for you to take!'), nl,
         i_am_at(Place),
         assert(at(Y,Place)),
         !, nl.
 
-/*talk_to(X) :-
+talk_to(X) :-
         talkable(X),
         assert(talked(X)),
         in(X, Y),
         write('The '), write(X), write(' dropped a '), write(Y), write(' for you to take!'), nl,
         i_am_at(Place),
         assert(at(Y,Place)),
-        !, nl.*/
+        !, nl.
 
 talk_to(X) :-
         talkable(X),
