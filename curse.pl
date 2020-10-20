@@ -58,10 +58,10 @@ controls :-
         write('Available commands are:'), nl,
         write('start.             -- to start the game.'), nl,
         write('n.  s.  e.  w.     -- to move in given direction.'), nl,
-        write('take(Object).      -- to pick up an object.'), nl,
+        /*write('take(Object).      -- to pick up an object.'), nl,
         write('drop(Object).      -- to put down an object.'), nl,
         write('examine(Object)    -- to examine an object.'), nl,
-        write('i.                 -- to check your inventory.'), nl,
+        write('i.                 -- to check your inventory.'), nl,*/
         write('look.              -- to look around you again.'), nl,
         write('controls.      -- to see this message again.'), nl,
         write('halt.              -- to end the game and quit.'), nl,
@@ -70,22 +70,22 @@ controls :-
 
 introduction :-
         nl,
-        write('The year is 1310. You are the town of Eadburgh''s local priest.'), nl,
-        write('Lately, people have been disappearing, there have been rumors of a'), nl,
-        write('vampiric curse menacing the town. You can trust no one.'), nl, nl,
+        write('The year is 1310. You are the town of Eadburgh''s local priest.'), nl, sleep(2),
+        write('Lately, people have been disappearing, there have been rumors of a'), nl, sleep(2),
+        write('vampiric curse menacing the town. You can trust no one.'), nl, nl, sleep(4),
 
-        write('The time is late at night when you hear someone knocking at your door...'), nl,
-        write('asking for help. As the priest, you cannot deny help to townspeople.'), nl,
-        write('You open the door to find a cloacked figure who suddenly attacks you,'), nl,
-        write('too fast to even try to defend yourself!'), nl, nl,
+        write('The time is late at night when you hear someone knocking at your door...'), nl, sleep(2),
+        write('asking for help. As the priest, you cannot deny help to townspeople.'), nl, sleep(2),
+        write('You open the door to find a cloacked figure who suddenly attacks you,'), nl, sleep(2),
+        write('too fast to even try to defend yourself!'), nl, nl, sleep(4),
 
-        write('You black out...'), nl, nl,
+        write('You black out...'), nl, nl, sleep(5),
 
-        write('You wake, lying on the floor before your church. You feel an acute pain'), nl,
-        write('to the neck. You feel it with your fingers to discover you have been'), nl,
-        write('bitten! "I have been cursed with vampirism", you figure, "I''ve got to'), nl,
-        write('find a way to revert the curse, and kill whatever thing cursed me." '), nl,
-        write('-------------------------------------'), nl,
+        write('You wake, lying on the floor before your church. You feel an acute pain'), nl, sleep(2),
+        write('to the neck. You feel it with your fingers to discover you have been'), nl, sleep(2),
+        write('bitten! "I have been cursed with vampirism", you figure, "I''ve got to'), nl, sleep(2),
+        write('find a way to revert the curse, and kill whatever thing cursed me." '), nl, sleep(2),
+        write('-------------------------------------'), nl, sleep(5),
         nl.
 
 
