@@ -11,27 +11,41 @@
 i_am_at(church_plaza).
 
 
-/* Definition of world map */
+/* Definition of world map. Some rooms are restricted until certain condition is met */
 
 path(church_plaza, s, main_plaza).
 path(main_plaza, n, church_plaza).
 
-path(church_plaza, n, church_altar_room).
+path(church_plaza, n, church_altar_room) :- holding(doll).
+path(church_plaza, n, church_altar_room) :-
+        write('Are you crazy? Attempting to enter a holy place with a vampiric curse laid upon yourself.'), nl,
+        write('You would burn whole!'), nl,
+        !, fail.
 path(church_altar_room, s, church_plaza).
 
 path(church_altar_room, w, church_study).
 path(church_study, e, church_altar_room).
 
-path(church_altar_room, e, church_basement).
+path(church_altar_room, e, church_basement) :- holding(prayer_book), holding(cross).
+path(church_altar_room, e, church_basement) :-
+        write("''I can't just go fight a vampire empty-handed. I should get both my cross and prayer book from home.'' "), nl,
+        !, fail.
 path(church_basement, w, church_altar_room).
 
-path(church_plaza, w, your_house).
+path(church_plaza, w, your_house) :- holding(house_key).
+path(church_plaza, w, your_house) :-
+        write('"It''s locked. I left the key in my study in the left wing of the church.'), nl,
+        write('I need to find a way to get inside..."'), nl,
+        !, fail.
 path(your_house, e, church_plaza).
 
 path(main_plaza, e, inn).
 path(inn, w, main_plaza).
 
-path(main_plaza, s, swamp).
+path(main_plaza, s, swamp) :- holding(compass).
+path(main_plaza, s, swamp) :-
+        write("''The swamp is a dangerous area to navigate without something or someone to guide me through it.'' "), nl,
+        !, fail.
 path(swamp, n, main_plaza).
 
 path(swamp, e, witch_cabin).
@@ -49,6 +63,7 @@ at(witch, witch_cabin).
 at(bark_piece, bald_cypress_tree_family).
 at(house_key, church_study).
 at(prayer_book, your_house).
+at(cross, your_house).
 at(vampire, church_basement).
 
 
@@ -62,8 +77,8 @@ talkable(bartender).
 in(bartender, beer_tankard).
 
 talkable(witch).
-in(witch, tonic).
-requires(tonic, bark_piece).
+in(witch, doll).
+requires(doll, bark_piece).
 
 
 /* Different scenarios that can happen when taking something */
@@ -75,7 +90,7 @@ take(X) :-
 
 take(X) :-
         requires(X,Y), \+ holding(Y),
-        write('You can''t take the '), write(X), write(' yet. You need to find '), write(Y), write(' first.'),
+        write('You can''t take the '), write(X), write(' yet. You need to find a '), write(Y), write(' first.'),
         !, nl.
 
 take(X) :-
@@ -87,17 +102,15 @@ take(compass) :-
         at(compass, Place),
         retract(at(compass, Place)),
         assert(holding(compass)),
-        drop(beer_tankard),
-        write('Exchanged the beer tankard for the compass'),
+        trade(beer_tankard),
         !, nl.
 
-take(tonic) :-
+take(doll) :-
         i_am_at(Place),
-        at(tonic, Place),
-        retract(at(tonic, Place)),
-        assert(holding(tonic)),
-        drop(bark_piece),
-        write('Added the bald cypress tree bark into the mix to complete the tonic'),
+        at(doll, Place),
+        retract(at(doll, Place)),
+        assert(holding(doll)),
+        trade(bark_piece),
         !, nl.
 
 take(X) :-
@@ -113,6 +126,8 @@ take(_) :-
         nl.
 
 
+/* Definition of different drop() scenarios */
+
 drop(X) :-
         holding(X),
         i_am_at(Place),
@@ -124,6 +139,30 @@ drop(X) :-
 drop(_) :-
         write('You aren''t holding it!'),
         nl.
+
+trade(beer_tankard) :-
+        holding(beer_tankard),
+        %i_am_at(Place),
+        retract(holding(beer_tankard)),
+        assert(at(beer_tankard, limbo)),
+        write('Beggar: Took you long enough. Yes yes take it, just give me my beer.'), nl, nl,
+
+        write('Handed the beer_tankard to the beggar.'), nl,
+        write('Took the compass.'),
+        !, nl.
+
+trade(bark_piece) :-
+        holding(bark_piece),
+        %i_am_at(Place),
+        retract(holding(bark_piece)),
+        assert(at(bark_piece, limbo)),
+        assert(at(witch, limbo)),
+        write('Old Jezabelle: You found it! Hand me the doll so I can cover it with the bark to have it done.'), nl,
+        write('You are free to take it. Good luck with your intent Old Jezabelle wishes to you, heheh...'), nl, nl,
+
+        write('The doll is complete and working now.'), nl,
+        write('Took the doll'),
+        !, nl.
 
 
 i :- write('Inventory:'), nl,
@@ -182,7 +221,7 @@ introduction :-
         nl.
 
 
-/* Predicate that reveals desctiption of current position and people/objects found there. */
+/* Predicate that reveals desctiption of current position and people/objects found there */
 
 look :-
         i_am_at(Place),
@@ -230,15 +269,15 @@ talk(witch) :-
         write('Every now and then, some pesky traveler comes to Old Jezabelle, looking for something great she can do for them.'), nl, %sleep(2),
         write('Some come searching for unnatural love, a treacherous bond if you ask me.'), nl, %sleep(2),
         write('Some others come seeking revenge on their most hated ones.'), nl, nl, %sleep(2),
-        write('What now? A priest, coming to such an godless being, to recover his hollyness...'), nl, %sleep(2),
+        write('What now? A priest, coming to such an godless being, to recover his holiness...'), nl, %sleep(2),
         write('Heheheh, listen. Old Jezabelle will help you, but just because she enjoys the irony of the situation.'), nl, %sleep(2),
-        write('Old Jezabelle cannot lift the curse, but she can prepare a tonic that will...'), nl, %sleep(2),
+        write('Old Jezabelle cannot lift the curse, but she can make a doll that will...'), nl, %sleep(2),
         write('shall we say, camouflage your current state from the eyes of your God.'), nl, %sleep(2),
-        write('By drinking the tonic, you should be able to go inside the church and slay the thing that laid that curse upon you.'), nl, %sleep(2),
+        write('While holding the doll, you should be able to go inside the church and slay the thing that laid that curse upon you.'), nl, %sleep(2),
         write('Yes, doing this should revert the curse permanently.'), nl, nl, %sleep(2),
-        write('Funny coincidence heheheh, Old Jezabelle was just finishing a tonic like the one she''s telling you about.'), nl, %sleep(2),
-        write('The only ingredient missing is a piece of bald cypress tree bark. Get me some of that to complete the tonic, and you are free to take it.'), nl, nl, %sleep(2),
-        write('Old Jezabelle dropped the '), write(Y), write(' for you to take once you get the missing ingredient.'), nl,
+        write('Funny coincidence heheheh, Old Jezabelle was just finishing a doll like the one she''s telling you about.'), nl, %sleep(2),
+        write('The only thing missing is a piece of bald cypress tree bark. Get me some of that to complete the doll, and you are free to take it.'), nl, nl, %sleep(2),
+        write('Old Jezabelle dropped the '), write(Y), write(' for you to take once you get the missing piece.'), nl,
         i_am_at(Place),
         assert(at(Y,Place)),
         !, nl.
@@ -250,7 +289,7 @@ talk(bartender) :-
         write('Bartender: Evenin'' Reverend! Woah, you''re lookin'' a wee bit under the weather tonight.'), nl, %sleep(2),
         write('Will you be having the usual? Red wine and the body of the Lord?'), nl, %sleep(2),
         write('Beer? Didn''t even know you liked it!'), nl, %sleep(2),
-        write('Anyway, this one''s on the house! Sure hope it makes you feel better! Or at least look better...'), nl, %sleep(2),
+        write('Anyway, this one''s on the house! Sure hope it makes you feel better! Or at least look better...'), nl, nl, %sleep(2),
         write('Bartender placed a '), write(Y), write(' on the counter for you to take.'), nl,
         i_am_at(Place),
         assert(at(Y,Place)),
@@ -274,7 +313,7 @@ talk(_) :-
         write('You can''t talk to inanimate objects.'), nl.
 
 
-/* These rules define the direction letters as calls to go/1. */
+/* Definition of directions for movement */
 
 n :- go(n).
 
@@ -285,7 +324,7 @@ e :- go(e).
 w :- go(w).
 
 
-/* This rule tells how to move in a given direction. */
+/* Definition of how movement works */
 
 go(Direction) :-
         i_am_at(Here), nl,
@@ -298,20 +337,21 @@ go(_) :-
         write('You cannot go that way.').
 
 
-/* These rules print descriptions about the rooms that make up the world. ***** STILL NEED TO WRITE MORE INTERESTING DESCRIPTIONS*/
+/* These rules print descriptions about the rooms that make up the world. ***** STILL NEED TO WRITE MORE INTERESTING DESCRIPTIONS */
 
 describe(church_plaza) :-
         write('You are in the church plaza.'), nl,
         write('You can hear violent noises coming from inside the church.'), nl,
         write('Could the thing that attacked you be hiding inside?'), nl.
 
+describe(main_plaza) :- holding(beer_tankard), nl,
+        write('You are in the main plaza and holding a beer tankard.'), !.
+
 describe(main_plaza) :-
         write('You are in the main plaza'), nl.
-        
 
 describe(your_house) :-
         write('You are home.'), nl.
-        
 
 describe(inn) :-
         write('You are at the inn.'), nl.
@@ -374,7 +414,7 @@ possible_ways(bald_cypress_tree_family) :-
 
 possible_ways(church_altar_room) :-
         write('To the south is the exit to church plaza.'), nl,
-        write('To the east are the stair to descend to the basement.'), nl,
+        write('To the east are the stairs to descend to the basement.'), nl,
         write('To the west is your study.'), nl,
         write('-------------------------------------').
 
