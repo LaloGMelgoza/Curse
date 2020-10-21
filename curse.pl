@@ -16,7 +16,9 @@ i_am_at(church_plaza).
 path(church_plaza, s, main_plaza).
 path(main_plaza, n, church_plaza).
 
-path(church_plaza, n, church_altar_room) :- holding(doll).
+path(church_plaza, n, church_altar_room) :-
+        holding(doll),
+        write('The effects of the doll allow you to stay in the church without burning to death.'), nl.
 path(church_plaza, n, church_altar_room) :-
         write('Are you crazy? Attempting to enter a holy place with a vampiric curse laid upon yourself.'), nl,
         write('You would burn whole!'), nl,
@@ -28,11 +30,13 @@ path(church_study, e, church_altar_room).
 
 path(church_altar_room, e, church_basement) :- holding(prayer_book), holding(cross).
 path(church_altar_room, e, church_basement) :-
-        write("''I can't just go fight a vampire empty-handed. I should get both my cross and prayer book from home.'' "), nl,
+        write("''I can't just go kill a vampire empty-handed. I should get both my cross and prayer book from home.'' "), nl,
         !, fail.
 path(church_basement, w, church_altar_room).
 
-path(church_plaza, w, your_house) :- holding(house_key).
+path(church_plaza, w, your_house) :-
+        holding(house_key),
+        write('Used your house key to unlock the door.'), nl.
 path(church_plaza, w, your_house) :-
         write('"It''s locked. I left the key in my study in the left wing of the church.'), nl,
         write('I need to find a way to get inside..."'), nl,
@@ -42,7 +46,9 @@ path(your_house, e, church_plaza).
 path(main_plaza, e, inn).
 path(inn, w, main_plaza).
 
-path(main_plaza, s, swamp) :- holding(compass).
+path(main_plaza, s, swamp) :-
+        holding(compass),
+        write('Used the compass to trverse the swamp.'), nl.
 path(main_plaza, s, swamp) :-
         write("''The swamp is a dangerous area to navigate without something or someone to guide me through it.'' "), nl,
         !, fail.
