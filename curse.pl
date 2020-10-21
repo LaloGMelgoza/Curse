@@ -11,27 +11,41 @@
 i_am_at(church_plaza).
 
 
-/* Definition of world map */
+/* Definition of world map. Some rooms are restricted until certain condition is met */
 
 path(church_plaza, s, main_plaza).
 path(main_plaza, n, church_plaza).
 
-path(church_plaza, n, church_altar_room).
+path(church_plaza, n, church_altar_room) :- holding(tonic).
+path(church_plaza, n, church_altar_room) :-
+        write('Are you crazy? Attempting to enter a holy place with a vampiric curse laid upon yourself.'), nl,
+        write('You would burn whole!'), nl,
+        !, fail.
 path(church_altar_room, s, church_plaza).
 
 path(church_altar_room, w, church_study).
 path(church_study, e, church_altar_room).
 
-path(church_altar_room, e, church_basement).
+path(church_altar_room, e, church_basement) :- holding(prayer_book), holding(cross).
+path(church_altar_room, e, church_basement) :-
+        write("''I can't just go fight a vampire empty-handed. I should get both my cross and prayer book from home.'' "), nl,
+        !, fail.
 path(church_basement, w, church_altar_room).
 
-path(church_plaza, w, your_house).
+path(church_plaza, w, your_house) :- holding(house_key).
+path(church_plaza, w, your_house) :-
+        write('"It''s locked. I left the key in my study in the left wing of the church.'), nl,
+        write('I need to find a way to get inside..."'), nl,
+        !, fail.
 path(your_house, e, church_plaza).
 
 path(main_plaza, e, inn).
 path(inn, w, main_plaza).
 
-path(main_plaza, s, swamp).
+path(main_plaza, s, swamp) :- holding(compass).
+path(main_plaza, s, swamp) :-
+        write("''The swamp is a dangerous area to navigate without something or someone to guide me through it.'' "), nl,
+        !, fail.
 path(swamp, n, main_plaza).
 
 path(swamp, e, witch_cabin).
@@ -49,6 +63,7 @@ at(witch, witch_cabin).
 at(bark_piece, bald_cypress_tree_family).
 at(house_key, church_study).
 at(prayer_book, your_house).
+at(cross, your_house).
 at(vampire, church_basement).
 
 
@@ -62,7 +77,7 @@ talkable(bartender).
 in(bartender, beer_tankard).
 
 talkable(witch).
-in(witch, tonic).
+in(witch, tonic). % CHANGE TONIC TO AMULET TO HOLD TO SOLVE PROBLEM OF WHEN NOT HOLDING ANYMORE CANNOT ENTER CHURCH
 requires(tonic, bark_piece).
 
 
@@ -110,6 +125,8 @@ take(_) :-
         write('I don''t see it here.'),
         nl.
 
+
+/* Definition of different drop() scenarios */
 
 drop(X) :-
         holding(X),
@@ -204,7 +221,7 @@ introduction :-
         nl.
 
 
-/* Predicate that reveals desctiption of current position and people/objects found there. */
+/* Predicate that reveals desctiption of current position and people/objects found there */
 
 look :-
         i_am_at(Place),
@@ -252,7 +269,7 @@ talk(witch) :-
         write('Every now and then, some pesky traveler comes to Old Jezabelle, looking for something great she can do for them.'), nl, %sleep(2),
         write('Some come searching for unnatural love, a treacherous bond if you ask me.'), nl, %sleep(2),
         write('Some others come seeking revenge on their most hated ones.'), nl, nl, %sleep(2),
-        write('What now? A priest, coming to such an godless being, to recover his hollyness...'), nl, %sleep(2),
+        write('What now? A priest, coming to such an godless being, to recover his holiness...'), nl, %sleep(2),
         write('Heheheh, listen. Old Jezabelle will help you, but just because she enjoys the irony of the situation.'), nl, %sleep(2),
         write('Old Jezabelle cannot lift the curse, but she can prepare a tonic that will...'), nl, %sleep(2),
         write('shall we say, camouflage your current state from the eyes of your God.'), nl, %sleep(2),
@@ -296,7 +313,7 @@ talk(_) :-
         write('You can''t talk to inanimate objects.'), nl.
 
 
-/* These rules define the direction letters as calls to go/1. */
+/* Definition of directions for movement */
 
 n :- go(n).
 
@@ -307,7 +324,7 @@ e :- go(e).
 w :- go(w).
 
 
-/* This rule tells how to move in a given direction. */
+/* Definition of how movement works */
 
 go(Direction) :-
         i_am_at(Here), nl,
@@ -320,7 +337,7 @@ go(_) :-
         write('You cannot go that way.').
 
 
-/* These rules print descriptions about the rooms that make up the world. ***** STILL NEED TO WRITE MORE INTERESTING DESCRIPTIONS*/
+/* These rules print descriptions about the rooms that make up the world. ***** STILL NEED TO WRITE MORE INTERESTING DESCRIPTIONS */
 
 describe(church_plaza) :-
         write('You are in the church plaza.'), nl,
@@ -397,7 +414,7 @@ possible_ways(bald_cypress_tree_family) :-
 
 possible_ways(church_altar_room) :-
         write('To the south is the exit to church plaza.'), nl,
-        write('To the east are the stair to descend to the basement.'), nl,
+        write('To the east are the stairs to descend to the basement.'), nl,
         write('To the west is your study.'), nl,
         write('-------------------------------------').
 
