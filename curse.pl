@@ -16,7 +16,7 @@ i_am_at(church_plaza).
 path(church_plaza, s, main_plaza).
 path(main_plaza, n, church_plaza).
 
-path(church_plaza, n, church_altar_room) :- holding(tonic).
+path(church_plaza, n, church_altar_room) :- holding(doll).
 path(church_plaza, n, church_altar_room) :-
         write('Are you crazy? Attempting to enter a holy place with a vampiric curse laid upon yourself.'), nl,
         write('You would burn whole!'), nl,
@@ -77,8 +77,8 @@ talkable(bartender).
 in(bartender, beer_tankard).
 
 talkable(witch).
-in(witch, tonic). % CHANGE TONIC TO AMULET TO HOLD TO SOLVE PROBLEM OF WHEN NOT HOLDING ANYMORE CANNOT ENTER CHURCH
-requires(tonic, bark_piece).
+in(witch, doll).
+requires(doll, bark_piece).
 
 
 /* Different scenarios that can happen when taking something */
@@ -105,11 +105,11 @@ take(compass) :-
         trade(beer_tankard),
         !, nl.
 
-take(tonic) :-
+take(doll) :-
         i_am_at(Place),
-        at(tonic, Place),
-        retract(at(tonic, Place)),
-        assert(holding(tonic)),
+        at(doll, Place),
+        retract(at(doll, Place)),
+        assert(holding(doll)),
         trade(bark_piece),
         !, nl.
 
@@ -157,11 +157,11 @@ trade(bark_piece) :-
         retract(holding(bark_piece)),
         assert(at(bark_piece, limbo)),
         assert(at(witch, limbo)),
-        write('Old Jezabelle: You found some! Add it to the mix to complete the tonic.'), nl,
+        write('Old Jezabelle: You found it! Hand me the doll so I can cover it with the bark to have it done.'), nl,
         write('You are free to take it. Good luck with your intent Old Jezabelle wishes to you, heheh...'), nl, nl,
 
-        write('Added the bark_piece to the mix.'), nl,
-        write('Took the tonic'),
+        write('The doll is complete and working now.'), nl,
+        write('Took the doll'),
         !, nl.
 
 
@@ -271,13 +271,13 @@ talk(witch) :-
         write('Some others come seeking revenge on their most hated ones.'), nl, nl, %sleep(2),
         write('What now? A priest, coming to such an godless being, to recover his holiness...'), nl, %sleep(2),
         write('Heheheh, listen. Old Jezabelle will help you, but just because she enjoys the irony of the situation.'), nl, %sleep(2),
-        write('Old Jezabelle cannot lift the curse, but she can prepare a tonic that will...'), nl, %sleep(2),
+        write('Old Jezabelle cannot lift the curse, but she can make a doll that will...'), nl, %sleep(2),
         write('shall we say, camouflage your current state from the eyes of your God.'), nl, %sleep(2),
-        write('By drinking the tonic, you should be able to go inside the church and slay the thing that laid that curse upon you.'), nl, %sleep(2),
+        write('While holding the doll, you should be able to go inside the church and slay the thing that laid that curse upon you.'), nl, %sleep(2),
         write('Yes, doing this should revert the curse permanently.'), nl, nl, %sleep(2),
-        write('Funny coincidence heheheh, Old Jezabelle was just finishing a tonic like the one she''s telling you about.'), nl, %sleep(2),
-        write('The only ingredient missing is a piece of bald cypress tree bark. Get me some of that to complete the tonic, and you are free to take it.'), nl, nl, %sleep(2),
-        write('Old Jezabelle dropped the '), write(Y), write(' for you to take once you get the missing ingredient.'), nl,
+        write('Funny coincidence heheheh, Old Jezabelle was just finishing a doll like the one she''s telling you about.'), nl, %sleep(2),
+        write('The only thing missing is a piece of bald cypress tree bark. Get me some of that to complete the doll, and you are free to take it.'), nl, nl, %sleep(2),
+        write('Old Jezabelle dropped the '), write(Y), write(' for you to take once you get the missing piece.'), nl,
         i_am_at(Place),
         assert(at(Y,Place)),
         !, nl.
