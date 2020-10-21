@@ -75,7 +75,7 @@ take(X) :-
 
 take(X) :-
         requires(X,Y), \+ holding(Y),
-        write('You can''t take the '), write(X), write(' yet. You need to find '), write(Y), write(' first.'),
+        write('You can''t take the '), write(X), write(' yet. You need to find a '), write(Y), write(' first.'),
         !, nl.
 
 take(X) :-
@@ -87,8 +87,7 @@ take(compass) :-
         at(compass, Place),
         retract(at(compass, Place)),
         assert(holding(compass)),
-        drop(beer_tankard),
-        write('Exchanged the beer tankard for the compass'),
+        trade(beer_tankard),
         !, nl.
 
 take(tonic) :-
@@ -96,8 +95,7 @@ take(tonic) :-
         at(tonic, Place),
         retract(at(tonic, Place)),
         assert(holding(tonic)),
-        drop(bark_piece),
-        write('Added the bald cypress tree bark into the mix to complete the tonic'),
+        trade(bark_piece),
         !, nl.
 
 take(X) :-
@@ -124,6 +122,30 @@ drop(X) :-
 drop(_) :-
         write('You aren''t holding it!'),
         nl.
+
+trade(beer_tankard) :-
+        holding(beer_tankard),
+        %i_am_at(Place),
+        retract(holding(beer_tankard)),
+        assert(at(beer_tankard, limbo)),
+        write('Beggar: Took you long enough. Yes yes take it, just give me my beer.'), nl, nl,
+
+        write('Handed the beer_tankard to the beggar.'), nl,
+        write('Took the compass.'),
+        !, nl.
+
+trade(bark_piece) :-
+        holding(bark_piece),
+        %i_am_at(Place),
+        retract(holding(bark_piece)),
+        assert(at(bark_piece, limbo)),
+        assert(at(witch, limbo)),
+        write('Old Jezabelle: You found some! Add it to the mix to complete the tonic.'), nl,
+        write('You are free to take it. Good luck with your intent Old Jezabelle wishes to you, heheh...'), nl, nl,
+
+        write('Added the bark_piece to the mix.'), nl,
+        write('Took the tonic'),
+        !, nl.
 
 
 i :- write('Inventory:'), nl,
@@ -250,7 +272,7 @@ talk(bartender) :-
         write('Bartender: Evenin'' Reverend! Woah, you''re lookin'' a wee bit under the weather tonight.'), nl, %sleep(2),
         write('Will you be having the usual? Red wine and the body of the Lord?'), nl, %sleep(2),
         write('Beer? Didn''t even know you liked it!'), nl, %sleep(2),
-        write('Anyway, this one''s on the house! Sure hope it makes you feel better! Or at least look better...'), nl, %sleep(2),
+        write('Anyway, this one''s on the house! Sure hope it makes you feel better! Or at least look better...'), nl, nl, %sleep(2),
         write('Bartender placed a '), write(Y), write(' on the counter for you to take.'), nl,
         i_am_at(Place),
         assert(at(Y,Place)),
@@ -305,13 +327,14 @@ describe(church_plaza) :-
         write('You can hear violent noises coming from inside the church.'), nl,
         write('Could the thing that attacked you be hiding inside?'), nl.
 
+describe(main_plaza) :- holding(beer_tankard), nl,
+        write('You are in the main plaza and holding a beer tankard.'), !.
+
 describe(main_plaza) :-
         write('You are in the main plaza'), nl.
-        
 
 describe(your_house) :-
         write('You are home.'), nl.
-        
 
 describe(inn) :-
         write('You are at the inn.'), nl.
