@@ -28,11 +28,12 @@ path(church_study, e, church_altar_room).
 
 path(church_altar_room, e, church_basement) :- holding(prayer_book), holding(cross).
 path(church_altar_room, e, church_basement) :-
-        write("''I can't just go fight a vampire empty-handed. I should get both my cross and prayer book from home.'' "), nl,
+        write("''I can't just go kill a vampire empty-handed. I should get both my cross and prayer book from home.'' "), nl,
         !, fail.
-path(church_basement, w, church_altar_room).
 
-path(church_plaza, w, your_house) :- holding(house_key).
+path(church_plaza, w, your_house) :-
+        holding(house_key),
+        write('Used your house key to unlock the door.'), nl.
 path(church_plaza, w, your_house) :-
         write('"It''s locked. I left the key in my study in the left wing of the church.'), nl,
         write('I need to find a way to get inside..."'), nl,
@@ -42,7 +43,9 @@ path(your_house, e, church_plaza).
 path(main_plaza, e, inn).
 path(inn, w, main_plaza).
 
-path(main_plaza, s, swamp) :- holding(compass).
+path(main_plaza, s, swamp) :-
+        holding(compass),
+        write('Used the compass to traverse the swamp.'), nl.
 path(main_plaza, s, swamp) :-
         write("''The swamp is a dangerous area to navigate without something or someone to guide me through it.'' "), nl,
         !, fail.
@@ -79,6 +82,8 @@ in(bartender, beer_tankard).
 talkable(witch).
 in(witch, doll).
 requires(doll, bark_piece).
+
+talkable(vampire).
 
 
 /* Different scenarios that can happen when taking something */
@@ -186,17 +191,16 @@ start :-
 controls :-
         nl,
         write('-------------------------------------'), nl,
-        write('Enter commands using standard Prolog syntax.'), nl,
-        write('Available commands are:'), nl,
-        write('start.             -- to start the game.'), nl,
-        write('n.  s.  e.  w.     -- to move in given direction.'), nl,
-        write('take(Object).      -- to pick up an object.'), nl,
-        /*write('drop(Object).      -- to put down an object.'), nl,
-        write('i.                 -- to check your inventory.'), nl,*/
-        write('talk(Person)    -- to talk to people.'), nl,
-        write('look.              -- to look around you again.'), nl,
-        write('controls.      -- to show controls again.'), nl,
-        write('halt.              -- to end game and quit.'), nl,
+        write('Enter commands using standard Prolog syntax.'), nl, nl,
+        write('start.                   -- to start the game.'), nl,
+        write('n.  s.  e.  w.         -- to move in given direction.'), nl,
+        write('take(Object).       -- to pick up an object.'), nl,
+        write('drop(Object).       -- to put down an object.'), nl,
+        write('i.                         -- to check your inventory.'), nl,
+        write('talk(Person)         -- to talk to people.'), nl,
+        write('look.                   -- to look around you again.'), nl,
+        write('controls.             -- to show controls again.'), nl,
+        write('halt.                    -- to end game and quit.'), nl,
         write('-------------------------------------'), nl,
         nl.
 
@@ -211,13 +215,15 @@ introduction :-
         write('You open the door to find a cloacked figure who suddenly attacks you,'), nl, %sleep(2),
         write('too fast to even try to defend yourself!'), nl, nl, %sleep(4),
 
+        write('While lying on the floor, you notice the cloaked figure stepping inside the church'), nl, %sleep(2),
+        write('closing the doors behind it.'), nl, nl, %sleep(2),
         write('You black out...'), nl, nl, %sleep(5),
 
         write('You wake, lying on the floor before your church. You feel an acute pain'), nl, %sleep(2),
         write('to the neck. You touch it with your fingers to discover you have been'), nl, %sleep(2),
         write('bitten! "I''ve been cursed with vampirism", you figure, "I''ve got to'), nl, %sleep(2),
         write('find a way to revert the curse, and kill whatever thing cursed me." '), nl, %sleep(2),
-        write('-------------------------------------'), nl, %%sleep(5),
+        write('-------------------------------------'), nl, %%sleep(6),
         nl.
 
 
@@ -231,9 +237,9 @@ look :-
         nl,
         possible_ways(Place).
 
-
 print_objects_found_in(Place) :-
         at(X, Place),
+        nl,
         write('There is a '), write(X), write(' here.'), nl,
         fail.
         
@@ -267,14 +273,14 @@ talk(witch) :-
         write('Cursed, huh? Heheheh, how careless of you!. So you want to know how to get rid of that curse, yes?'), nl, %sleep(2),
         write('Heheheh...'), nl, %sleep(2),
         write('Every now and then, some pesky traveler comes to Old Jezabelle, looking for something great she can do for them.'), nl, %sleep(2),
-        write('Some come searching for unnatural love, a treacherous bond if you ask me.'), nl, %sleep(2),
-        write('Some others come seeking revenge on their most hated ones.'), nl, nl, %sleep(2),
+        write('Some come seeking revenge on their most hated ones.'), nl, %sleep(2),
+        write('Some others come searching for unnatural love, a treacherous bond if you ask me.'), nl, nl, %sleep(2),
         write('What now? A priest, coming to such an godless being, to recover his holiness...'), nl, %sleep(2),
         write('Heheheh, listen. Old Jezabelle will help you, but just because she enjoys the irony of the situation.'), nl, %sleep(2),
         write('Old Jezabelle cannot lift the curse, but she can make a doll that will...'), nl, %sleep(2),
         write('shall we say, camouflage your current state from the eyes of your God.'), nl, %sleep(2),
         write('While holding the doll, you should be able to go inside the church and slay the thing that laid that curse upon you.'), nl, %sleep(2),
-        write('Yes, doing this should revert the curse permanently.'), nl, nl, %sleep(2),
+        write('Yes, doing that should revert the curse permanently.'), nl, nl, %sleep(2),
         write('Funny coincidence heheheh, Old Jezabelle was just finishing a doll like the one she''s telling you about.'), nl, %sleep(2),
         write('The only thing missing is a piece of bald cypress tree bark. Get me some of that to complete the doll, and you are free to take it.'), nl, nl, %sleep(2),
         write('Old Jezabelle dropped the '), write(Y), write(' for you to take once you get the missing piece.'), nl,
@@ -287,12 +293,29 @@ talk(bartender) :-
         assert(talked(bartender)),
         in(bartender, Y),
         write('Bartender: Evenin'' Reverend! Woah, you''re lookin'' a wee bit under the weather tonight.'), nl, %sleep(2),
-        write('Will you be having the usual? Red wine and the body of the Lord?'), nl, %sleep(2),
+        write('Will you be having the usual? Red wine and the body of the Lord?'), nl, %sleep(3),
         write('Beer? Didn''t even know you liked it!'), nl, %sleep(2),
         write('Anyway, this one''s on the house! Sure hope it makes you feel better! Or at least look better...'), nl, nl, %sleep(2),
         write('Bartender placed a '), write(Y), write(' on the counter for you to take.'), nl,
         i_am_at(Place),
         assert(at(Y,Place)),
+        !, nl.
+
+talk(vampire) :-
+        talkable(vampire),
+        assert(talked(vampire)),
+        write('Vampire: Ahh, you found your way into my hideout.'), nl, %sleep(2),
+        write('I see you are holding a doll just like mine.'), nl, %sleep(2),
+        write('To be honest, I thought I killed you during our first encounter.'), nl, %sleep(2),
+        write('No worries, since the oportunity presented itself to me, this time I shall kill you right.'), nl, nl, %sleep(2),
+        write('* As you take out your cross and your holy book, the vampire flinches against the wall. *'), nl, %sleep(2),
+        write('* You pronounce some lines from the book, making the vampire twitch in pain. *'), nl, %sleep(2),
+        write('* You raise the cross and point it directly in the creature''s direction. *'), nl, %sleep(2),
+        write('* The vampire''s life force slowly drains until it is completely gone. *'), nl, %sleep(2),
+        write('* It finally receeds into colorless dust, falling onto the cold, stone floor of Eadburgh''s Church *'), nl, %sleep(2),
+        write('* You got rid of the creature that has been terrorizing Eadburgh. *'), nl, %sleep(2),
+        write('* You can feel the curse leave your body, as if something got off your shoulders. *'), nl, %sleep(5),
+        game_over,
         !, nl.
 
 talk(X) :-
@@ -304,6 +327,7 @@ talk(X) :-
         assert(at(Y,Place)),
         !, nl.
 
+% This shows up when theres no dialogue given to a talkable character yet.
 talk(X) :-
         talkable(X),
         assert(talked(X)),
@@ -311,6 +335,11 @@ talk(X) :-
 
 talk(_) :-
         write('You can''t talk to inanimate objects.'), nl.
+
+game_over :-
+        nl,
+        write('GAME OVER. THANKS FOR PLAYING.'), nl,
+        write('please enter the halt command.').
 
 
 /* Definition of directions for movement */
@@ -341,38 +370,51 @@ go(_) :-
 
 describe(church_plaza) :-
         write('You are in the church plaza.'), nl,
-        write('You can hear violent noises coming from inside the church.'), nl,
-        write('Could the thing that attacked you be hiding inside?'), nl.
-
-describe(main_plaza) :- holding(beer_tankard), nl,
-        write('You are in the main plaza and holding a beer tankard.'), !.
+        write('You can hear violent noises coming from inside the church.').
 
 describe(main_plaza) :-
-        write('You are in the main plaza'), nl.
+        write('You are in the main plaza').
 
 describe(your_house) :-
-        write('You are home.'), nl.
+        write('You are home.').
 
 describe(inn) :-
-        write('You are at the inn.'), nl.
+        write('You are at the inn.').
 
 describe(swamp) :- 
-        write('You are at the swamp.'), nl.
+        write('You are at the swamp.').
 
 describe(witch_cabin) :-
-        write('You are inside the cabin.'), nl.
+        write('You are inside the cabin.').
 
 describe(bald_cypress_tree_family) :-
-        write('You are surrounded by Bald Cypress trees.'), nl.
+        write('You are surrounded by Bald Cypress trees.').
 
 describe(church_altar_room) :-
-        write('You are in the church''s altar room.'), nl.
+        holding(cross),
+        holding(prayer_book),
+        write('You are in the church''s altar room.'), nl,
+        write('The effects of the doll allow you to stay here without burning to death.'), nl,
+        write('The violent noises coming from the basement have gone silent...'),
+        !.
+
+describe(church_altar_room) :-
+        holding(doll),
+        write('You are in the church''s altar room.'), nl,
+        write('The effects of the doll allow you to stay here without burning to death.'), nl,
+        write('You perceive that the violent noises are coming from the church''s basement.'),
+        !.
+
+describe(church_altar_room) :-
+        write('You are in the church''s altar room.'), nl,
+        write('You perceive that the violent noises are coming from the church''s basement.').
 
 describe(church_study) :-
-        write('You are in your study.'), nl.
+        write('You are in your study.').
 
 describe(church_basement) :-
-        write('You are in the church basement.'), nl.
+        write('You are in the church basement.'), nl,
+        write('It is freezing in here. You can feel a dense shiver traveling through your body.').
 
 
 /* Defines the possible paths to take from each location */
@@ -421,10 +463,6 @@ possible_ways(church_altar_room) :-
 possible_ways(church_study) :-
         write('To the east is the exit to the altar room.'), nl,
         write('-------------------------------------').
-
-possible_ways(church_basement) :-
-        write('To the east are the stairs to exit back to the altar room.'), nl,
-        write('-------------------------------------').        
 
 
 
