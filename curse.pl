@@ -28,6 +28,12 @@ path(church_altar_room, w, church_study).
 path(church_study, e, church_altar_room).
 
 path(church_altar_room, e, church_basement) :- holding(prayer_book), holding(cross).
+path(church_altar_room, e, church_basement) :- holding(prayer_book),
+	write("''The prayer book alone will do no good, I need my cross too.''"), nl,
+	!, fail.
+path(church_altar_room, e, church_basement) :- holding(cross),
+	write("''The cross alone will do no good, I need my prayer book too.''"), nl,
+	!, fail.
 path(church_altar_room, e, church_basement) :-
         write("''I can't just go kill a vampire empty-handed. I should get both my cross and prayer book from home.'' "), nl,
         !, fail.
@@ -46,7 +52,7 @@ path(inn, w, main_plaza).
 
 path(main_plaza, s, swamp) :-
         holding(compass),
-        write('Used the compass to traverse the swamp.'), nl.
+        write('Used the compass to move through the swamp.'), nl.
 path(main_plaza, s, swamp) :-
         write("''The swamp is a dangerous area to navigate without something or someone to guide me through it.'' "), nl,
         !, fail.
@@ -198,7 +204,7 @@ controls :-
         write('take(Object).        to pick up an object.'), nl,
         %write('drop(Object).        to put down an object.'), nl,
         write('i.                          to check your inventory.'), nl,
-        write('talk(Character)     to talk to other characters.'), nl,
+        write('talk(Character).    to talk to other characters.'), nl,
         write('look.                    to look around you again.'), nl,
         write('controls.              to show controls again.'), nl,
         write('halt.                     to end game and quit.'), nl,
@@ -213,18 +219,19 @@ introduction :-
 
         write('The time is late at night when you hear someone knocking at your door...'), nl, %sleep(2),
         write('asking for help. As the priest, you cannot deny help to townspeople.'), nl, %sleep(2),
-        write('You open the door to find a cloacked figure who suddenly attacks you,'), nl, %sleep(2),
+        write('You open the door to find a cloaked figure who suddenly attacks you,'), nl, %sleep(2),
         write('too fast to even try to defend yourself!'), nl, nl, %sleep(4),
 
         write('While lying on the floor, you notice the cloaked figure stepping inside the church'), nl, %sleep(2),
         write('closing the doors behind it.'), nl, nl, %sleep(2),
+
         write('You black out...'), nl, nl, %sleep(5),
 
         write('You wake, lying on the floor before your church. You feel an acute pain'), nl, %sleep(2),
         write('to the neck. You touch it with your fingers to discover you have been'), nl, %sleep(2),
         write('bitten! "I''ve been cursed with vampirism", you figure, "I''ve got to'), nl, %sleep(2),
         write('find a way to revert the curse, and kill whatever thing cursed me." '), nl, %sleep(2),
-        write('-------------------------------------'), nl, %%sleep(6),
+        write('-------------------------------------'), nl, %sleep(6),
         nl.
 
 
@@ -374,7 +381,8 @@ describe(church_plaza) :-
         write('You can hear violent noises coming from inside the church.').
 
 describe(main_plaza) :-
-        write('You are in the main plaza').
+        write('You are in the main plaza,'), nl,
+        write('Everything is quiet.').
 
 describe(your_house) :-
         write('You are home.'), nl,
@@ -382,16 +390,22 @@ describe(your_house) :-
         write('but you have to keep going.').
 
 describe(inn) :-
-        write('You are at the inn.').
+        write('You are at the inn.'), nl,
+        write('You love the welcoming atmosphere this place always has.').
 
 describe(swamp) :- 
-        write('You are at the swamp.').
+        write('You are at the swamp.'), nl,
+        write('The moist air is thick here, you find it hard to breathe.').
 
 describe(witch_cabin) :-
-        write('You are inside the cabin.').
+        write('You are inside the cabin.'), nl,
+        write('The walls are covered with shelves,'), nl,
+        write('topped with all sorts of weird stuff like plants and critters.').
 
 describe(bald_cypress_tree_family) :-
-        write('You are surrounded by Bald Cypress trees.').
+        write('You are surrounded by enormous Bald Cypress trees.'), nl,
+        write('One of the trees seems to have been struck by lightning,'), nl,
+        write('breaking down its trunk into small pieces of bark.').
 
 describe(church_altar_room) :-
         holding(cross),
