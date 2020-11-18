@@ -173,7 +173,7 @@ trade(bark_piece) :-
         write('You are free to take it. Good luck with your intent Old Jezabelle wishes to you, heheh...'), nl, nl, %sleep(1),
 
         write('The doll is complete and working now.'), nl,
-        write('Took the doll'),
+        write('Took the doll.'),
         !, nl.
 
 
@@ -202,9 +202,9 @@ controls :-
         write('start.                    to start the game.'), nl,
         write('n.  s.  e.  w.          to move in given direction.'), nl,
         write('take(Object).        to pick up an object.'), nl,
+        write('talk(Character).    to talk to other characters.'), nl,
         %write('drop(Object).        to put down an object.'), nl,
         write('i.                          to check your inventory.'), nl,
-        write('talk(Character).    to talk to other characters.'), nl,
         write('look.                    to look around you again.'), nl,
         write('controls.              to show controls again.'), nl,
         write('halt.                     to end game and quit.'), nl,
@@ -277,13 +277,13 @@ talk(witch) :-
         isNPC(witch),
         assert(talked(witch)),
         in(witch, Y),
-        write('Old Jezabel: I''m a witch, but that you might have already figured, old cabin in the swamp and all heheh.'), nl, %sleep(2),
-        write('Cursed, huh? Heheheh, how careless of you!. So you want to know how to get rid of that curse, yes?'), nl, %sleep(2),
+        write('Old Jezabelle: I''m a witch, but that you might have already figured, old cabin in the swamp and all heheh.'), nl, %sleep(2),
+        write('Cursed, huh? Heheheh, how careless of you! So you want to know how to get rid of that curse, yes?'), nl, %sleep(2),
         write('Heheheh...'), nl, %sleep(2),
         write('Every now and then, some pesky traveler comes to Old Jezabelle, looking for something great she can do for them.'), nl, %sleep(2),
         write('Some come seeking revenge on their most hated ones.'), nl, %sleep(2),
         write('Some others come searching for unnatural love, a treacherous bond if you ask me.'), nl, nl, %sleep(2),
-        write('What now? A priest, coming to such an godless being, to recover his holiness...'), nl, %sleep(2),
+        write('What now? A priest, coming to such a godless being, to recover his holiness...'), nl, %sleep(2),
         write('Heheheh, listen. Old Jezabelle will help you, but just because she enjoys the irony of the situation.'), nl, %sleep(2),
         write('Old Jezabelle cannot lift the curse, but she can make a doll that will...'), nl, %sleep(2),
         write('shall we say, camouflage your current state from the eyes of your God.'), nl, %sleep(2),
@@ -302,8 +302,9 @@ talk(bartender) :-
         in(bartender, Y),
         write('Bartender: Evenin'' Reverend! Woah, you''re lookin'' a wee bit under the weather tonight.'), nl, %sleep(2),
         write('Will you be having the usual? Red wine and the body of the Lord?'), nl, %sleep(3),
-        write('Beer? Didn''t even know you liked it!'), nl, %sleep(2),
-        write('Anyway, this one''s on the house! Sure hope it makes you feel better! Or at least look better...'), nl, nl, %sleep(2),
+        write('Beer? Didn''t even know you liked that!'), nl, %sleep(2),
+        write('Anyway, this one''s on the house! Sure hope it makes you feel better!'), nl, %sleep(2),
+        write('Or at least look better...'), nl, nl, %sleep(2),
         write('Bartender placed a '), write(Y), write(' on the counter for you to take.'), nl,
         actual_position(Place),
         assert(at(Y,Place)),
@@ -320,7 +321,7 @@ talk(vampire) :-
         write('* You pronounce some lines from the book, making the vampire twitch in pain. *'), nl, %sleep(2),
         write('* You raise the cross and point it directly in the creature''s direction. *'), nl, %sleep(2),
         write('* The vampire''s life force slowly drains until it is completely gone. *'), nl, %sleep(2),
-        write('* It finally receeds into colorless dust, falling onto the cold, stone floor of Eadburgh''s Church *'), nl, %sleep(2),
+        write('* It finally receds into colorless dust, falling onto the cold, stone floor of Eadburgh''s Church *'), nl, %sleep(2),
         write('* You got rid of the creature that has been terrorizing Eadburgh. *'), nl, %sleep(2),
         write('* You can feel the curse leave your body, as if something got off your shoulders. *'), nl, %sleep(5),
         game_over,
@@ -342,7 +343,7 @@ talk(X) :-
         write('There''s nothing special about '), write(X), write('.'), !, nl.
 
 talk(_) :-
-        write('You can''t talk to inanimate objects.'), nl.
+        write('You do realise what you are trying to do right?'), nl.
 
 game_over :-
         nl,
@@ -390,7 +391,7 @@ describe(your_house) :-
         write('but you have to keep going.').
 
 describe(inn) :-
-        write('You are at the inn.'), nl,
+        write('You are at the Inn.'), nl,
         write('You love the welcoming atmosphere this place always has.').
 
 describe(swamp) :- 
@@ -428,7 +429,7 @@ describe(church_altar_room) :-
 
 describe(church_study) :-
         write('You are in your study.'), nl,
-        write('Everything is still the way you left it before being atacked.'), nl,
+        write('Everything is still the way you left it before being attacked.'), nl,
         write('Lucky that thing did not go into this room.').
 
 describe(church_basement) :-
