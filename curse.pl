@@ -321,7 +321,7 @@ talk(vampire) :-
         write('* You pronounce some lines from the book, making the vampire twitch in pain. *'), nl, %sleep(2),
         write('* You raise the cross and point it directly in the creature''s direction. *'), nl, %sleep(2),
         write('* The vampire''s life force slowly drains until it is completely gone. *'), nl, %sleep(2),
-        write('* It finally receeds into colorless dust, falling onto the cold, stone floor of Eadburgh''s Church *'), nl, %sleep(2),
+        write('* It finally receds into colorless dust, falling onto the cold, stone floor of Eadburgh''s Church *'), nl, %sleep(2),
         write('* You got rid of the creature that has been terrorizing Eadburgh. *'), nl, %sleep(2),
         write('* You can feel the curse leave your body, as if something got off your shoulders. *'), nl, %sleep(5),
         game_over,
@@ -429,7 +429,7 @@ describe(church_altar_room) :-
 
 describe(church_study) :-
         write('You are in your study.'), nl,
-        write('Everything is still the way you left it before being atacked.'), nl,
+        write('Everything is still the way you left it before being attacked.'), nl,
         write('Lucky that thing did not go into this room.').
 
 describe(church_basement) :-
